@@ -1731,16 +1731,37 @@
   scene.add(buildAzulejos());
 
   var lampGroup = buildLamp(); scene.add(lampGroup);
+  /* Végétal organisé en 5 compositions volontaires (plus rien d'isolé au hasard) :
+     1. massif jungle du coin avant-droit — hauteurs dégradées du mur vers la pièce
+     2. rythme du mur gauche — sansevierias encadrant la fenêtre, araignée sous les azulejos
+     3. trio du coin platine
+     4. ponctuation bureau/coffre le long des murs du fond et de droite
+     5. hauteurs (pothos sur meubles) + canopée suspendue au-dessus des groupes au sol */
+
+  // 1 — massif jungle : trois monsteras en fond de coin…
+  scene.add(buildPlant(4.55,2.2,1.35,'monstera'));
+  scene.add(buildPlant(4.0,3.1,1.2,'monstera'));
+  scene.add(buildPlant(4.55,3.6,1.1,'monstera'));
+  // …fougères à mi-hauteur…
+  scene.add(buildPlant(3.4,2.7,0.9,'fern'));
+  scene.add(buildPlant(3.5,3.9,0.85,'fern'));
+  // …araignées basses en lisière, côté pièce
+  scene.add(buildPlant(2.7,3.3,0.85,'spider'));
+  scene.add(buildPlant(2.9,4.3,0.75,'spider'));
+
+  // 2 — mur gauche : paire de sansevierias de part et d'autre du bas de la fenêtre
+  scene.add(buildPlant(-4.4,0.6,1.0,'sansevieria'));
+  scene.add(buildPlant(-4.45,2.35,0.85,'sansevieria'));
+  // araignée sous la frise d'azulejos
+  scene.add(buildPlant(-4.45,-2.1,0.85,'spider'));
+
+  // 3 — trio du coin platine : la table, une fougère, une araignée
+  scene.add(buildPlant(-4.4,4.05,0.95,'fern'));
+  scene.add(buildPlant(-3.15,4.2,0.8,'spider'));
+
+  // 4 — ponctuation bureau/coffre : angle arrière-droit en L le long des murs
   var plant2 = buildPlant(4.4,-3.1,1.1,'sansevieria'); scene.add(plant2);
-  // la jungle : le côté droit libéré par le fauteuil devient un coin végétal
-  scene.add(buildPlant(2.6,2.8,1.25,'monstera'));
-  scene.add(buildPlant(3.4,3.5,0.95,'fern'));
-  scene.add(buildPlant(1.9,4.1,1.1,'monstera'));
-  scene.add(buildPlant(4.35,1.3,1.35,'monstera'));
-  scene.add(buildPlant(3.6,2.2,0.7,'fern'));
-  scene.add(buildPlant(-4.35,1.0,1.05,'sansevieria'));
-  scene.add(buildPlant(-4.5,4.2,0.9,'fern'));
-  scene.add(buildPlant(1.1,4.4,0.85,'sansevieria'));
+  scene.add(buildPlant(4.65,-1.85,0.8,'spider'));
   var shelfPlant = buildPlant(-3.55,-3.7,0.55,'pothos'); shelfPlant.position.y = 2.62; scene.add(shelfPlant);
   var deskPlant = buildPlant(1.7,-3.5,0.42,'pothos'); deskPlant.position.y = 1.06; scene.add(deskPlant);
   var safePlant = buildPlant(3.95,-1.0,0.5,'pothos'); safePlant.position.y = 1.28; scene.add(safePlant);
@@ -1754,29 +1775,26 @@
   scene.add(buildVine([[-4.82,1.34,2.05],[-4.88,1.16,1.45],[-4.9,1.42,0.85],[-4.88,1.12,0.3],[-4.9,1.38,-0.25]], 0.9));
   // la grimpante qui monte vers le néon ₿ — la nature à l'assaut de la technologie
   scene.add(buildVine([[-4.9,0.08,-1.35],[-4.88,0.75,-1.55],[-4.9,1.55,-1.42],[-4.88,2.35,-1.62],[-4.9,3.0,-1.5]], 1.05));
-  // rampante au sol, du massif vers le ballon
-  scene.add(buildVine([[2.55,0.05,2.95],[1.95,0.03,2.45],[1.3,0.05,2.75],[0.65,0.03,2.35],[0.05,0.04,2.6]], 0.95));
+  // rampante au sol : elle longe la lisière du massif vers le coin sport
+  scene.add(buildVine([[2.6,0.05,4.1],[2.0,0.03,3.75],[1.4,0.05,4.15],[0.75,0.03,3.85],[0.1,0.04,4.1]], 0.95));
   // rampante au sol, de la console vers le tapis
   scene.add(buildVine([[-4.05,0.05,0.15],[-3.45,0.03,0.5],[-2.85,0.05,0.85],[-2.25,0.03,0.65]], 0.85));
   // le coin bureau se végétalise aussi
   scene.add(buildPlant(-1.5,-3.45,1.0,'monstera'));
   scene.add(buildPlant(2.6,-3.55,0.85,'sansevieria'));
-  scene.add(buildPlant(2.35,-2.05,0.7,'fern'));
+  scene.add(buildPlant(2.95,-2.75,0.75,'fern'));
   scene.add(buildVine([[1.78,1.04,-3.5],[1.88,0.8,-3.35],[1.82,0.5,-3.25],[1.92,0.16,-3.35]], 0.8));
-  // la canopée : suspensions accrochées au plafond, feuillage retombant
-  scene.add(buildHangingPlant(2.9,2.9,2.9));
-  scene.add(buildHangingPlant(1.2,3.25,2.1));
-  scene.add(buildHangingPlant(-2.8,3.05,2.0));
-  scene.add(buildHangingPlant(-4.2,3.1,2.7));
-  scene.add(buildHangingPlant(4.1,3.0,-2.0));
-  scene.add(buildHangingPlant(0.9,3.35,0.5));
-  scene.add(buildHangingPlant(0.0,3.0,4.3));
-  scene.add(buildHangingPlant(-3.9,3.3,-2.3));
-  // plantes-araignées au sol, feuilles arquées
-  scene.add(buildPlant(0.3,2.6,0.9,'spider'));
-  scene.add(buildPlant(-1.0,4.2,0.95,'spider'));
-  scene.add(buildPlant(4.7,0.2,0.8,'spider'));
-  scene.add(buildPlant(2.2,-1.35,0.75,'spider'));
+  // 5 — canopée : les suspensions surplombent les groupes au sol, jamais le vide
+  // diagonale de trois au-dessus du massif jungle, hauteurs décroissantes vers l'avant
+  scene.add(buildHangingPlant(4.2,3.3,1.6));
+  scene.add(buildHangingPlant(3.5,3.05,2.6));
+  scene.add(buildHangingPlant(2.8,2.85,3.5));
+  // paire symétrique qui encadre la fenêtre
+  scene.add(buildHangingPlant(-4.3,3.15,0.35));
+  scene.add(buildHangingPlant(-4.3,3.15,2.65));
+  // une au-dessus du coin platine, une au-dessus du coin sport
+  scene.add(buildHangingPlant(-3.6,3.0,3.9));
+  scene.add(buildHangingPlant(-1.6,3.1,4.05));
   var neonSign = buildNeonSign(); scene.add(neonSign);
   var deskNeon = buildDeskNeon(); scene.add(deskNeon);
 
