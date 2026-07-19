@@ -138,6 +138,30 @@
   }
   .sound-toggle:active{ transform: scale(0.95); }
 
+  /* ---------- rotation caméra ---------- */
+  .cam-controls{
+    position:absolute; right:1rem; bottom: clamp(4.4rem, 9vh, 5.6rem);
+    display:flex; gap:0.45rem; z-index:14;
+  }
+  .cam-btn{
+    width:2.4rem; height:2.4rem;
+    font-family: var(--font-mono);
+    font-size:1.05rem; line-height:1;
+    color: var(--ink);
+    background: rgba(13,13,26,0.85);
+    border:1px solid rgba(247,147,26,0.35);
+    border-radius:3px;
+    cursor:pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5), 0 0 12px rgba(247,147,26,0.10);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+  .cam-btn:hover{
+    color: var(--btc);
+    border-color: var(--btc);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 20px rgba(247,147,26,0.3);
+  }
+  .cam-btn:active{ transform: scale(0.92); }
+
   /* ---------- veil ---------- */
   .veil{
     position:fixed; inset:0; z-index:50;
@@ -425,11 +449,16 @@
     <div class="card">
       <h1><span class="glyph">₿</span> Helder Salvador</h1>
       <p class="tagline">Ingénieur blockchain — CEO &amp; co-fondateur, PredCast</p>
-      <p class="hint">cliquez un meuble pour déchiffrer</p>
+      <p class="hint">cliquez un meuble — glissez pour tourner</p>
     </div>
   </header>
 
   <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="false">♪ jungle : off</button>
+
+  <div class="cam-controls" role="group" aria-label="Rotation de la caméra">
+    <button id="camLeft" class="cam-btn" type="button" aria-label="Tourner la caméra vers la gauche">⟲</button>
+    <button id="camRight" class="cam-btn" type="button" aria-label="Tourner la caméra vers la droite">⟳</button>
+  </div>
 
   <nav class="dock" aria-label="Zones du repaire">
     <button class="tag" type="button" data-hotspot="fauteuil" aria-pressed="false">Fauteuil</button>
@@ -641,6 +670,15 @@
   var camera = new THREE.OrthographicCamera(-1,1,1,-1, 0.1, 80);
   var ISO_DIR = new THREE.Vector3(1,0.92,1).normalize();
   var DIST = 22;
+
+  // rotation orbitale : azimut borné au quadrant ouvert de la pièce
+  // (au-delà, on regarderait le dos des deux murs)
+  var camAz = Math.PI/4;
+  var AZ_MIN = 0.14, AZ_MAX = Math.PI/2 - 0.14;
+  function updateIsoDir(){
+    ISO_DIR.set(Math.SQRT2*Math.sin(camAz), 0.92, Math.SQRT2*Math.cos(camAz)).normalize();
+  }
+  updateIsoDir();
 
   function updateFrustum(){
     var aspect = window.innerWidth/window.innerHeight;
@@ -1917,12 +1955,45 @@
     }
   });
   canvas.addEventListener('pointerleave', function(){ setHovered(null); tooltipEl.classList.remove('visible'); });
-  canvas.addEventListener('pointerdown', function(e){ pointerDown.x = e.clientX; pointerDown.y = e.clientY; });
+  // glisser horizontalement = orbiter (clic sec = ouvrir un hotspot)
+  var camDrag = { active:false, startX:0, startAz:0 };
+  canvas.addEventListener('pointerdown', function(e){
+    pointerDown.x = e.clientX; pointerDown.y = e.clientY;
+    camDrag.active = true; camDrag.startX = e.clientX; camDrag.startAz = camAz;
+  });
+  canvas.addEventListener('pointermove', function(e){
+    if(!camDrag.active) return;
+    var dx = e.clientX - camDrag.startX;
+    if(Math.abs(dx) > 4){
+      camAz = Math.max(AZ_MIN, Math.min(AZ_MAX, camDrag.startAz - dx*0.0045));
+      updateIsoDir();
+      applyCamera();
+    }
+  });
   canvas.addEventListener('pointerup', function(e){
+    camDrag.active = false;
     var moved = Math.hypot(e.clientX-pointerDown.x, e.clientY-pointerDown.y);
     if(moved > 6) return;
     var id = getPointerHotspot(e.clientX, e.clientY);
     if(id){ openHotspot(id, null); }
+  });
+  canvas.addEventListener('pointercancel', function(){ camDrag.active = false; });
+
+  // boutons ⟲ ⟳ et flèches clavier : rotation par paliers de ~20°, tweenée
+  function tweenAz(delta){
+    var target = Math.max(AZ_MIN, Math.min(AZ_MAX, camAz + delta));
+    if(reduced){ camAz = target; updateIsoDir(); applyCamera(); return; }
+    var proxy = { v: camAz };
+    gsap.to(proxy, {
+      v: target, duration: 0.7, ease: 'power2.inOut', overwrite: 'auto',
+      onUpdate: function(){ camAz = proxy.v; updateIsoDir(); applyCamera(); }
+    });
+  }
+  document.getElementById('camLeft').addEventListener('click', function(){ tweenAz(0.35); });
+  document.getElementById('camRight').addEventListener('click', function(){ tweenAz(-0.35); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowLeft'){ tweenAz(0.35); }
+    else if(e.key === 'ArrowRight'){ tweenAz(-0.35); }
   });
 
   dockButtons.forEach(function(btn){
@@ -2131,6 +2202,7 @@
   if(!reduced){
     gsap.set('.nameplate .card', { opacity:0, y:-22 });
     gsap.set('.sound-toggle',    { opacity:0, y:-14 });
+    gsap.set('.cam-btn',         { opacity:0, y:14 });
     gsap.set('.tag',             { opacity:0, y:26 });
   }
 
@@ -2142,6 +2214,7 @@
     var tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
     tl.to('.nameplate .card', { opacity:1, y:0, duration:0.65, clearProps:'transform,opacity' })
       .to('.sound-toggle',    { opacity:1, y:0, duration:0.5,  clearProps:'transform,opacity' }, '-=0.4')
+      .to('.cam-btn',         { opacity:1, y:0, duration:0.45, stagger:0.08, clearProps:'transform,opacity' }, '-=0.35')
       .to('.tag',             { opacity:1, y:0, duration:0.5, stagger:0.055, clearProps:'transform,opacity' }, '-=0.35');
   }
 
