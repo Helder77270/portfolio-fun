@@ -80,8 +80,12 @@
     content:"";
     position:absolute; left:0; right:0; top:0; height:2px;
     background: linear-gradient(90deg, transparent, var(--btc) 25%, var(--cyan) 50%, var(--magenta) 75%, transparent);
+    background-size: 200% 100%;
     opacity:0.9;
+    /* idle : la ligne néon dérive lentement (GPU only, coupé par prefers-reduced-motion) */
+    animation: neonSlide 7s linear infinite;
   }
+  @keyframes neonSlide{ to{ background-position: -200% 0; } }
   .nameplate h1{
     font-family: var(--font-mono);
     font-weight: 800;
@@ -132,6 +136,7 @@
     border-color:#679a52;
     box-shadow: 0 6px 18px rgba(0,0,0,0.5), 0 0 18px rgba(103,154,82,0.4);
   }
+  .sound-toggle:active{ transform: scale(0.95); }
 
   /* ---------- veil ---------- */
   .veil{
@@ -214,8 +219,16 @@
     z-index:14;
   }
   .dock::-webkit-scrollbar{ display:none; }
+  /* affordance de scroll : les bords s'estompent + snap doux */
+  .dock{
+    scroll-snap-type: x proximity;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+  }
   .tag{
     position:relative;
+    overflow:hidden;
+    scroll-snap-align:center;
     flex: 0 0 auto;
     font-family: var(--font-mono);
     font-size: 0.7rem;
@@ -251,6 +264,24 @@
     text-shadow:none;
   }
   .tag[aria-pressed="true"]::before{ color: #100a02; text-shadow:none; }
+  /* press feedback : le bouton "s'enfonce" (150-200ms) */
+  .tag:active{ transform: translateY(0) scale(0.96); }
+  /* shine sweep cyberpunk au survol — transform/opacity only */
+  .tag::after{
+    content:"";
+    position:absolute; top:0; bottom:0; left:-55%; width:40%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.20), transparent);
+    transform: skewX(-20deg);
+    opacity:0;
+    pointer-events:none;
+  }
+  .tag:hover::after{ animation: shineSweep 0.55s ease-out; }
+  @keyframes shineSweep{
+    from{ transform: translateX(0) skewX(-20deg); opacity:1; }
+    to{ transform: translateX(340%) skewX(-20deg); opacity:0; }
+  }
+  /* pas de shine sur tactile : le hover n'y existe pas */
+  @media (hover:none){ .tag:hover::after{ animation:none; } }
 
   /* ---------- overlay + panel ---------- */
   .overlay{
@@ -292,9 +323,11 @@
     font-family: var(--font-mono);
     color: var(--btc);
     cursor:pointer;
-    transition: background 0.2s ease, box-shadow 0.2s ease;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.25s ease;
   }
-  .panel-close:hover{ background: rgba(247,147,26,0.12); box-shadow: 0 0 14px rgba(247,147,26,0.3); }
+  /* le × pivote au survol, s'enfonce au clic */
+  .panel-close:hover{ background: rgba(247,147,26,0.12); box-shadow: 0 0 14px rgba(247,147,26,0.3); transform: rotate(90deg); }
+  .panel-close:active{ transform: rotate(90deg) scale(0.9); }
   .panel-kicker{
     font-size: 0.68rem;
     letter-spacing: 0.18em;
@@ -327,10 +360,13 @@
     font-family: var(--font-mono); font-size: 0.66rem; letter-spacing:0.1em; text-transform:uppercase;
     padding: 0.32rem 0.65rem; border-radius: 3px;
     box-shadow: 0 0 16px rgba(247,147,26,0.35);
-    opacity:0; transition: opacity 0.2s ease;
+    opacity:0;
+    transform: translate(-50%,-140%) scale(0.88);
+    /* pop avec léger overshoot (ressort discret) */
+    transition: opacity 0.18s ease, transform 0.18s cubic-bezier(.34,1.56,.64,1);
     white-space:nowrap;
   }
-  .tooltip.visible{ opacity:1; }
+  .tooltip.visible{ opacity:1; transform: translate(-50%,-140%) scale(1); }
 
   a{ text-decoration: none; }
   a.ext-link{ text-decoration: underline; text-underline-offset:3px; }
@@ -1822,6 +1858,14 @@
     currentFocus = HOTSPOTS[id].focus;
     gsap.to(camState, { t:1, duration: reduced?0:1.1, ease:'power3.inOut', onUpdate:applyCamera, overwrite:true });
     renderPanel(id);
+    // transition d'état : le contenu du panneau entre en cascade (kicker → titre → paragraphes)
+    // réglages : duration 0.45s, écart 50ms, délai 180ms le temps que le panneau glisse
+    if(!reduced){
+      gsap.fromTo('#panelKicker, #panelTitle, #panelBody > *',
+        { opacity:0, y:14 },
+        { opacity:1, y:0, duration:0.45, stagger:0.05, delay:0.18, ease:'power2.out', clearProps:'transform,opacity', overwrite:true }
+      );
+    }
     panelEl.classList.add('is-open');
     overlayEl.classList.add('is-visible');
     panelEl.setAttribute('aria-hidden','false');
@@ -2063,6 +2107,25 @@
   var termOut = document.getElementById('termOut');
   var irisEl = document.getElementById('iris');
   var bootDone = false;
+  var uiRevealed = false;
+
+  // état initial de l'UI avant la révélation (uniquement si les animations sont permises)
+  if(!reduced){
+    gsap.set('.nameplate .card', { opacity:0, y:-22 });
+    gsap.set('.sound-toggle',    { opacity:0, y:-14 });
+    gsap.set('.tag',             { opacity:0, y:26 });
+  }
+
+  // moment clé n°2 : l'interface entre en scène dans le prolongement de l'iris
+  // réglages : titre 0.65s → bouton son → dock en stagger 55ms ; ease-out doux
+  function revealUI(){
+    if(uiRevealed || reduced) return;
+    uiRevealed = true;
+    var tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+    tl.to('.nameplate .card', { opacity:1, y:0, duration:0.65, clearProps:'transform,opacity' })
+      .to('.sound-toggle',    { opacity:1, y:0, duration:0.5,  clearProps:'transform,opacity' }, '-=0.4')
+      .to('.tag',             { opacity:1, y:0, duration:0.5, stagger:0.055, clearProps:'transform,opacity' }, '-=0.35');
+  }
 
   var BOOT_LINES = [
     { p:'> ', t:'boot repaire.exe --user=helder' },
@@ -2108,12 +2171,13 @@
       irisEl.style.height = (r*2)+'px';
       irisEl.style.opacity = String(Math.max(0, 1-t*1.15));
       if(t<1){ requestAnimationFrame(step); }
-      else { veil.style.display = 'none'; }
+      else { veil.style.display = 'none'; revealUI(); }
     }
     requestAnimationFrame(step);
     // filet de sécurité : si rAF est gelé (onglet throttlé), on retire le voile quand même
     setTimeout(function(){
       if(veil.style.display !== 'none'){ veil.style.display = 'none'; }
+      revealUI();
     }, dur+500);
   }
 
