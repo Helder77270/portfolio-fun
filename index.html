@@ -599,7 +599,7 @@
       tagline:'Ingénieur blockchain — CEO & co-fondateur, PredCast',
       hint:'cliquez un meuble — glissez pour tourner',
       sound:{ on:'♪ jungle : on', off:'♪ jungle : off' },
-      a11y:{ lang:'Passer le site en anglais', close:'Fermer', dock:'Zones du repaire', camL:'Tourner la caméra vers la gauche', camR:'Tourner la caméra vers la droite' },
+      a11y:{ lang:'Changer la langue du site', close:'Fermer', dock:'Zones du repaire', camL:'Tourner la caméra vers la gauche', camR:'Tourner la caméra vers la droite' },
       tags:{ portrait:'Portrait', construire:'Construire', chercher:'Chercher', transmettre:'Transmettre', explorer:'Explorer', arsenal:'Arsenal' },
       dock:{ fauteuil:'Fauteuil', bureau:'Bureau', coffre:'Coffre', console:'Console', platine:'Platine', ballon:'Sport', bibliotheque:'Bibliothèque', tableau:'Tableau', fenetre:'Fenêtre', helder:'Helder' },
       boot:[
@@ -674,7 +674,7 @@
       tagline:'Blockchain engineer — CEO & co-founder, PredCast',
       hint:'click a piece of furniture — drag to rotate',
       sound:{ on:'♪ jungle: on', off:'♪ jungle: off' },
-      a11y:{ lang:'Switch the site to French', close:'Close', dock:'Areas of the lair', camL:'Rotate camera left', camR:'Rotate camera right' },
+      a11y:{ lang:'Change the site language', close:'Close', dock:'Areas of the lair', camL:'Rotate camera left', camR:'Rotate camera right' },
       tags:{ portrait:'Portrait', construire:'Build', chercher:'Search', transmettre:'Teach', explorer:'Explore', arsenal:'Arsenal' },
       dock:{ fauteuil:'Armchair', bureau:'Desk', coffre:'Vault', console:'Console', platine:'Turntable', ballon:'Sport', bibliotheque:'Bookshelf', tableau:'Board', fenetre:'Window', helder:'Helder' },
       boot:[
@@ -743,11 +743,92 @@
                '<p>Concise and direct — tuned to whoever is across.</p>'+
                '<p>'+LINK_GH+'&nbsp;&nbsp;'+LINK_LI+'</p>' }
       }
+    },
+    pt: {
+      title:'Helder Salvador — O covil',
+      tagline:'Engenheiro blockchain — CEO & co-fundador, PredCast',
+      hint:'clique num móvel — arraste para rodar',
+      sound:{ on:'♪ selva: on', off:'♪ selva: off' },
+      a11y:{ lang:'Mudar o idioma do site', close:'Fechar', dock:'Zonas do covil', camL:'Rodar a câmara para a esquerda', camR:'Rodar a câmara para a direita' },
+      tags:{ portrait:'Retrato', construire:'Construir', chercher:'Procurar', transmettre:'Transmitir', explorer:'Explorar', arsenal:'Arsenal' },
+      dock:{ fauteuil:'Poltrona', bureau:'Secretária', coffre:'Cofre', console:'Consola', platine:'Gira-discos', ballon:'Desporto', bibliotheque:'Estante', tableau:'Quadro', fenetre:'Janela', helder:'Helder' },
+      boot:[
+        { p:'> ', t:'boot covil.exe --user=helder' },
+        { p:'> ', t:'a carregar módulos blockchain… ', ok:'[OK]' },
+        { p:'> ', t:'a verificar sha256(genesis)… ', ok:'[OK]' },
+        { p:'> ', t:'a ligar à chiliz chain… ', ok:'[OK]' },
+        { p:'> ', t:'a regar as plantas… ', ok:'[OK]' },
+        { p:'> ', t:'don\'t trust, verify.' },
+        { p:'> ', t:'', granted:'ACCESS GRANTED' }
+      ],
+      hotspots:{
+        fauteuil:{ title:'A poltrona',
+          body:'<p>Helder Salvador. Instalado há pouco em Lisboa, Portugal.</p>'+
+               '<p>Línguas de trabalho: francês, inglês, e um português europeu em aprendizagem ativa.</p>'+
+               '<p>Uma conversa com ele é concisa e direta — ajustada a quem está do outro lado.</p>'+
+               '<p>'+LINK_GH+'&nbsp;&nbsp;'+LINK_LI+'</p>' },
+        bureau:{ title:'A secretária',
+          body:'<p><strong>CEO &amp; co-fundador da PredCast</strong> (predcast.tv).</p>'+
+               '<p>Uma plataforma de streaming desportivo em direto com mercados de previsão nativos on-chain, construída na Chiliz Chain. «The home of SportFi.» — Watch. Predict. Earn.</p>'+
+               '<p>Co-fundada com Antony Loussararian (CTO, ex-Nomadic Labs). O projeto chamou-se ChilizTV, depois BetCast, antes de se tornar PredCast.</p>'+
+               '<p><a class="ext-link" href="https://predcast.tv" target="_blank" rel="noopener noreferrer">predcast.tv ↗</a></p>' },
+        bibliotheque:{ title:'A estante',
+          body:'<p>Pensamento crítico, filosofia, liderança, empreendedorismo — as prateleiras inclinam todas para o mesmo lado.</p>'+
+               '<p>Em destaque, capa virada para a sala:</p>'+
+               '<p><strong>Pensar, Depressa e Devagar</strong> — Daniel Kahneman. Duas velocidades de pensamento, e saber qual está ao volante.</p>'+
+               '<p><strong>Power</strong> — Robert Greene. As relações de poder, lidas sem ingenuidade.</p>'+
+               '<p>Ao lado, na mesma prateleira: as <strong>Cartas</strong> de Séneca, e o <strong>Flow</strong> de Mihály Csíkszentmihályi.</p>' },
+        tableau:{ title:'O quadro',
+          body:'<p>Engenheiro blockchain de formação.</p>'+
+               '<p>Concebeu e dirigiu a especialização de engenharia blockchain na <strong>ESGI</strong>, Paris.</p>'+
+               '<p>Hoje <strong>Blockchain Specialist na NovaSBE</strong> para o <strong>Blockchain.pt</strong>, programa nacional PRR em Portugal.</p>'+
+               '<p>Autor do curso «Project Management for Blockchain Initiatives».</p>'+
+               '<p><a class="ext-link" href="https://www.blockchain.pt/" target="_blank" rel="noopener noreferrer">blockchain.pt ↗</a>&nbsp;&nbsp;'+
+               '<a class="ext-link" href="https://blockchainacademy.online/" target="_blank" rel="noopener noreferrer">blockchainacademy.online ↗</a></p>' },
+        coffre:{ title:'O cofre',
+          body:'<p>O que ele guarda a sete chaves — e traz para a mesa quando um projeto o merece:</p>'+
+               '<p><strong>Smart contracts &amp; EVM</strong> — Solidity, conceção e arquitetura de contratos, standards ERC (ERC-721…), deployment em chains compatíveis com a EVM.</p>'+
+               '<p><strong>Multi-chain</strong> — Tezos e Solana (Anchor / Rust) ao lado da EVM.</p>'+
+               '<p><strong>Chiliz Chain</strong> e o ecossistema SportFi — uma chain EVM que pratica em produção.</p>'+
+               '<p><strong>Rondas early-stage</strong> — estruturação equity &amp; Web3.</p>'+
+               '<p><strong>Programas pedagógicos técnicos</strong> — conceção e direção.</p>'+
+               '<p><strong>Estratégia regulatória Web3</strong> — MiCA, apostas, streaming.</p>' },
+        fenetre:{ title:'A janela',
+          body:'<p>Vista sobre o que se prepara — ainda em fase de conceito:</p>'+
+               '<p><strong>Proofund</strong> — infraestrutura de trust-scoring e rastreabilidade para o financiamento humanitário e associativo.</p>'+
+               '<p><strong>Probora</strong> — plataforma criativa colaborativa: prova de anterioridade ZK e financiamento por etapas.</p>' },
+        console:{ title:'A consola',
+          body:'<p>Videojogos, lado estaleiro: um projeto em preparação para o <strong>ETHGlobal Lisbon</strong> (julho de 2026).</p>'+
+               '<p>Tokenização de jogos indie com distribuição em CD físico — <strong>ERC-721</strong>, World ID, 0G Labs, The Graph.</p>'+
+               '<p>A pilha de CDs no móvel só espera pela gravação.</p>' },
+        platine:{ title:'O gira-discos',
+          body:'<p>O canto onde se descomprime entre dois blocos. Três capas contra a mesa, três humores:</p>'+
+               '<p><strong>Jazz japonês</strong> — Ryo Fukui à cabeça. <em>Scenery</em>, numa noite de chuva em Lisboa. '+ytLink('ryo+fukui+scenery','ouvir')+'</p>'+
+               '<p><strong>Reggaeton old school</strong> — a escola Daddy Yankee. '+ytLink('daddy+yankee','ouvir')+'</p>'+
+               '<p><strong>New gen</strong> — Bad Bunny, Rauw Alejandro. '+ytLink('bad+bunny+rauw+alejandro','ouvir')+'</p>' },
+        ballon:{ title:'O canto do desporto',
+          body:'<p>Três desportos praticados, três escolas:</p>'+
+               '<p><strong>Futebol</strong> — a bola redonda, sempre ao alcance do pé.</p>'+
+               '<p><strong>Futebol americano</strong> — jogado na Divisão 2.</p>'+
+               '<p><strong>Kickboxing</strong> — a disciplina do ringue.</p>'+
+               '<p>E o desporto é também a sua matéria-prima: <strong>PredCast</strong> — «Watch. Predict. Earn.» na Chiliz Chain.</p>' },
+        helder:{ title:'Helder',
+          body:'<p>Ele mesmo — a passear pelo seu covil.</p>'+
+               '<p>Instalado há pouco em Lisboa, Portugal. Línguas de trabalho: francês, inglês, e um português europeu em aprendizagem ativa.</p>'+
+               '<p>Conciso e direto — ajustado a quem está do outro lado.</p>'+
+               '<p>'+LINK_GH+'&nbsp;&nbsp;'+LINK_LI+'</p>' }
+      }
     }
   };
 
-  // langue par défaut : celle du navigateur, bascule manuelle ensuite
-  var lang = ((navigator.language||'fr').toLowerCase().indexOf('fr')===0) ? 'fr' : 'en';
+  // langue par défaut : celle du navigateur, bascule manuelle ensuite (cycle FR → EN → PT)
+  var LANG_CYCLE = ['fr','en','pt'];
+  var lang = (function(){
+    var nav = (navigator.language||'').toLowerCase();
+    if(nav.indexOf('fr')===0){ return 'fr'; }
+    if(nav.indexOf('pt')===0){ return 'pt'; }
+    return 'en';
+  })();
 
   var OVERVIEW = { target:new THREE.Vector3(0,1.3,1), zoom: 1 };
 
@@ -2229,7 +2310,8 @@
     dockButtons.forEach(function(b){ b.textContent = I18N[lang].dock[b.dataset.hotspot]; });
     var soundOn = soundBtn.getAttribute('aria-pressed') === 'true';
     soundBtn.textContent = I18N[lang].sound[soundOn ? 'on' : 'off'];
-    langBtn.textContent = lang === 'fr' ? 'EN' : 'FR';
+    // le bouton affiche la prochaine langue du cycle FR → EN → PT
+    langBtn.textContent = LANG_CYCLE[(LANG_CYCLE.indexOf(lang)+1)%LANG_CYCLE.length].toUpperCase();
     langBtn.setAttribute('aria-label', I18N[lang].a11y.lang);
     closeBtn.setAttribute('aria-label', I18N[lang].a11y.close);
     document.querySelector('.dock').setAttribute('aria-label', I18N[lang].a11y.dock);
@@ -2239,7 +2321,7 @@
   }
 
   langBtn.addEventListener('click', function(){
-    applyLang(lang === 'fr' ? 'en' : 'fr');
+    applyLang(LANG_CYCLE[(LANG_CYCLE.indexOf(lang)+1)%LANG_CYCLE.length]);
   });
 
   applyLang(lang);
